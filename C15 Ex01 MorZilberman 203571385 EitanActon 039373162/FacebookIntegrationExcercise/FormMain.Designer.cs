@@ -56,8 +56,6 @@
             // 
             // pbUserProfilePic
             // 
-            this.pbUserProfilePic.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.pbUserProfilePic.Location = new System.Drawing.Point(12, 46);
             this.pbUserProfilePic.Name = "pbUserProfilePic";
             this.pbUserProfilePic.Size = new System.Drawing.Size(151, 126);
