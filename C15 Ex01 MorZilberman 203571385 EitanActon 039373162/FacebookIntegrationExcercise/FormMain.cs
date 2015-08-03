@@ -32,6 +32,7 @@ namespace FacebookIntegrationExcercise
             }
             else
             {
+                
                 m_LoggedInUser = loginResult.LoggedInUser;
                 //fetchUserInfo();  TO DO
             }
@@ -45,11 +46,6 @@ namespace FacebookIntegrationExcercise
         private void buttonLogin_Click(object sender, EventArgs e)
         {
             loginAndInit();
-        }
-
-        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Environment.Exit(0);
         }
     }
 }
