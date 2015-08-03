@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using FacebookWrapper;
+using FacebookWrapper.ObjectModel;
 
 namespace FacebookIntegrationExcercise
 {
@@ -19,7 +21,7 @@ namespace FacebookIntegrationExcercise
 
         private void buttonLogin_Click(object sender, EventArgs e)
         {
-            FacebookWrapper.FacebookService.Login("1519758448246535", new string[] { "public_profile", "email", "user_friends" });
+            LoginResult loginResult = FacebookService.Login("1519758448246535", new string[] { "public_profile", "email", "user_friends" });
         }
     }
 }
