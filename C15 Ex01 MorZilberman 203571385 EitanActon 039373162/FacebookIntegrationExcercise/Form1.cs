@@ -16,5 +16,10 @@ namespace FacebookIntegrationExcercise
         {
             InitializeComponent();
         }
+
+        private void buttonLogin_Click(object sender, EventArgs e)
+        {
+            FacebookWrapper.FacebookService.Login("1519758448246535", new string[] { "public_profile", "email", "user_friends" });
+        }
     }
 }
