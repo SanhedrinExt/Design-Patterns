@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.buttonLogin = new System.Windows.Forms.Button();
             this.pbUserProfilePic = new System.Windows.Forms.PictureBox();
             this.listBoxNewsFeed = new System.Windows.Forms.ListBox();
@@ -40,12 +42,19 @@
             this.pbEventPic = new System.Windows.Forms.PictureBox();
             this.checkBoxStayLoggedIn = new System.Windows.Forms.CheckBox();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
-            this.additionalFeaturesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.advancedFeaturesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectToTwitchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.notifyIconTwitchService = new System.Windows.Forms.NotifyIcon(this.components);
+            this.contextMenuStripSystemTray = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemOpenFacebookApp = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExitFacebookApp = new System.Windows.Forms.ToolStripMenuItem();
+            this.timerTwitchUpdateChecker = new System.Windows.Forms.Timer(this.components);
+            this.massRSVPEventsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pbUserProfilePic)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbFriendPicture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbEventPic)).BeginInit();
             this.menuStrip.SuspendLayout();
+            this.contextMenuStripSystemTray.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonLogin
@@ -164,24 +173,27 @@
             this.checkBoxStayLoggedIn.TabIndex = 49;
             this.checkBoxStayLoggedIn.Text = "Keep me logged in";
             this.checkBoxStayLoggedIn.UseVisualStyleBackColor = true;
+            this.checkBoxStayLoggedIn.CheckedChanged += new System.EventHandler(this.checkBoxStayLoggedIn_CheckedChanged);
             // 
             // menuStrip
             // 
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.additionalFeaturesToolStripMenuItem});
+            this.advancedFeaturesToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(681, 24);
             this.menuStrip.TabIndex = 50;
             this.menuStrip.Text = "menuStrip1";
             // 
-            // additionalFeaturesToolStripMenuItem
+            // advancedFeaturesToolStripMenuItem
             // 
-            this.additionalFeaturesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.connectToTwitchToolStripMenuItem});
-            this.additionalFeaturesToolStripMenuItem.Name = "additionalFeaturesToolStripMenuItem";
-            this.additionalFeaturesToolStripMenuItem.Size = new System.Drawing.Size(119, 20);
-            this.additionalFeaturesToolStripMenuItem.Text = "Advanced Features";
+            this.advancedFeaturesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.connectToTwitchToolStripMenuItem,
+            this.massRSVPEventsToolStripMenuItem});
+            this.advancedFeaturesToolStripMenuItem.Name = "advancedFeaturesToolStripMenuItem";
+            this.advancedFeaturesToolStripMenuItem.Size = new System.Drawing.Size(119, 20);
+            this.advancedFeaturesToolStripMenuItem.Text = "Advanced Features";
+            this.advancedFeaturesToolStripMenuItem.Click += new System.EventHandler(this.additionalFeaturesToolStripMenuItem_Click);
             // 
             // connectToTwitchToolStripMenuItem
             // 
@@ -191,6 +203,51 @@
             this.connectToTwitchToolStripMenuItem.ToolTipText = "Lets the user connect his Twitch account to enable automatic FB posts when they g" +
     "o live.";
             this.connectToTwitchToolStripMenuItem.Click += new System.EventHandler(this.connectToTwitchToolStripMenuItem_Click);
+            // 
+            // notifyIconTwitchService
+            // 
+            this.notifyIconTwitchService.BalloonTipText = "Facebook App is still running";
+            this.notifyIconTwitchService.ContextMenuStrip = this.contextMenuStripSystemTray;
+            this.notifyIconTwitchService.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIconTwitchService.Icon")));
+            this.notifyIconTwitchService.Text = "Facebook App";
+            this.notifyIconTwitchService.Visible = true;
+            // 
+            // contextMenuStripSystemTray
+            // 
+            this.contextMenuStripSystemTray.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemOpenFacebookApp,
+            this.toolStripMenuItemExitFacebookApp});
+            this.contextMenuStripSystemTray.Name = "contextMenuStripSystemTray";
+            this.contextMenuStripSystemTray.Size = new System.Drawing.Size(183, 48);
+            this.contextMenuStripSystemTray.Text = "Facebook App";
+            // 
+            // toolStripMenuItemOpenFacebookApp
+            // 
+            this.toolStripMenuItemOpenFacebookApp.Name = "toolStripMenuItemOpenFacebookApp";
+            this.toolStripMenuItemOpenFacebookApp.Size = new System.Drawing.Size(182, 22);
+            this.toolStripMenuItemOpenFacebookApp.Text = "Open Facebook App";
+            this.toolStripMenuItemOpenFacebookApp.Click += new System.EventHandler(this.toolStripMenuItemOpenFacebookApp_Click);
+            // 
+            // toolStripMenuItemExitFacebookApp
+            // 
+            this.toolStripMenuItemExitFacebookApp.Name = "toolStripMenuItemExitFacebookApp";
+            this.toolStripMenuItemExitFacebookApp.Size = new System.Drawing.Size(182, 22);
+            this.toolStripMenuItemExitFacebookApp.Text = "Exit Facebook App";
+            this.toolStripMenuItemExitFacebookApp.Click += new System.EventHandler(this.toolStripMenuItemExitFacebookApp_Click);
+            // 
+            // timerTwitchUpdateChecker
+            // 
+            this.timerTwitchUpdateChecker.Enabled = true;
+            this.timerTwitchUpdateChecker.Interval = 10000;
+            this.timerTwitchUpdateChecker.Tick += new System.EventHandler(this.timerTwitchUpdateChecker_Tick);
+            // 
+            // massRSVPEventsToolStripMenuItem
+            // 
+            this.massRSVPEventsToolStripMenuItem.Name = "massRSVPEventsToolStripMenuItem";
+            this.massRSVPEventsToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.massRSVPEventsToolStripMenuItem.Text = "Mass RSVP events";
+            this.massRSVPEventsToolStripMenuItem.ToolTipText = "Fetches the list of events you haven\'t RSVPd to, and lets you mass response.";
+            this.massRSVPEventsToolStripMenuItem.Click += new System.EventHandler(this.unsubscribeInactiveEventsToolStripMenuItem_Click);
             // 
             // FormMain
             // 
@@ -211,13 +268,17 @@
             this.Controls.Add(this.menuStrip);
             this.MainMenuStrip = this.menuStrip;
             this.Name = "FormMain";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Facebook app";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
+            this.Move += new System.EventHandler(this.FormMain_Move);
+            this.Resize += new System.EventHandler(this.FormMain_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.pbUserProfilePic)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbFriendPicture)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbEventPic)).EndInit();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
+            this.contextMenuStripSystemTray.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -237,8 +298,14 @@
         private System.Windows.Forms.PictureBox pbEventPic;
         private System.Windows.Forms.CheckBox checkBoxStayLoggedIn;
         private System.Windows.Forms.MenuStrip menuStrip;
-        private System.Windows.Forms.ToolStripMenuItem additionalFeaturesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem advancedFeaturesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem connectToTwitchToolStripMenuItem;
+        private System.Windows.Forms.NotifyIcon notifyIconTwitchService;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripSystemTray;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpenFacebookApp;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExitFacebookApp;
+        private System.Windows.Forms.Timer timerTwitchUpdateChecker;
+        private System.Windows.Forms.ToolStripMenuItem massRSVPEventsToolStripMenuItem;
     }
 }
 

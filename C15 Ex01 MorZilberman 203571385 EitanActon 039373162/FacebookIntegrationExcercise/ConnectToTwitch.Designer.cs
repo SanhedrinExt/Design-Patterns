@@ -54,11 +54,11 @@
             // checkBoxAutoPost
             // 
             this.checkBoxAutoPost.AutoSize = true;
-            this.checkBoxAutoPost.Location = new System.Drawing.Point(6, 38);
+            this.checkBoxAutoPost.Location = new System.Drawing.Point(63, 38);
             this.checkBoxAutoPost.Name = "checkBoxAutoPost";
-            this.checkBoxAutoPost.Size = new System.Drawing.Size(266, 17);
+            this.checkBoxAutoPost.Size = new System.Drawing.Size(163, 17);
             this.checkBoxAutoPost.TabIndex = 2;
-            this.checkBoxAutoPost.Text = "Automatically post to my wall when I start streaming";
+            this.checkBoxAutoPost.Text = "Enable stream start auto post";
             this.checkBoxAutoPost.UseVisualStyleBackColor = true;
             // 
             // buttonOk
@@ -91,6 +91,7 @@
             this.Controls.Add(this.checkBoxAutoPost);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBoxUserName);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ConnectToTwitch";

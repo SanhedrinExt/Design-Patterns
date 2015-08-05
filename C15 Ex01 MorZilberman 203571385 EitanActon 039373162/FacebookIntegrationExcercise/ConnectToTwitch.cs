@@ -12,6 +12,28 @@ namespace FacebookIntegrationExcercise
 {
     public partial class ConnectToTwitch : Form
     {
+        /// <summary>
+        /// Do we want to autopost to Facebook on the user's behalf?
+        /// </summary>
+        public bool AutoPostFacebookUpdate
+        {
+            get
+            {
+                return checkBoxAutoPost.Checked;
+            }
+        }
+
+        /// <summary>
+        /// The inputted Twitch username.
+        /// </summary>
+        public string TwitchUserName
+        {
+            get
+            {
+                return textBoxUserName.Text;
+            }
+        }
+
         public ConnectToTwitch(string i_UserName, bool i_AutoPost)
         {
             InitializeComponent();

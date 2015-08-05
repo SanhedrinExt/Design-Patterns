@@ -10,25 +10,9 @@ using System.IO;
 
 namespace FacebookIntegrationExcercise
 {
-    
     public class UserInfo
     {
-        private static UserInfo s_UserInfoSingalton = null;
-
-        private UserInfo(){}
-
-        public static UserInfo Singleton
-        {
-            get
-            {
-                if (s_UserInfoSingalton == null)
-                {
-                    s_UserInfoSingalton = new UserInfo();
-                }
-
-                return s_UserInfoSingalton;
-            }
-        }
+        private static UserInfo s_UserInfoSingleton = null;
 
         public Point Location { set; get; }
         public Size Size { set; get; }
@@ -36,6 +20,26 @@ namespace FacebookIntegrationExcercise
         public string AccessToken { set; get; }
         public string TwitchUserName { get; set; }
         public bool AutoPostTwitchUpdates { get; set; }
+
+        private UserInfo()
+        {
+        }
+
+        /// <summary>
+        /// Gets the singleton instance of the userinfo.
+        /// </summary>
+        public static UserInfo Singleton
+        {
+            get
+            {
+                if (s_UserInfoSingleton == null)
+                {
+                    s_UserInfoSingleton = new UserInfo();
+                }
+
+                return s_UserInfoSingleton;
+            }
+        }
 
 
         private string parseUserInfoToXml()
@@ -49,6 +53,10 @@ namespace FacebookIntegrationExcercise
             return xml;
         }
         
+        /// <summary>
+        /// Save user settings to file.
+        /// </summary>
+        /// <param name="i_filePath">Path to save file.</param>
         public void SaveUserInfoAsXmlFile(string i_filePath)
         {
             using (StreamWriter file = new StreamWriter(i_filePath))
@@ -57,16 +65,27 @@ namespace FacebookIntegrationExcercise
             }
         }
 
-        public void ReadUserInfo(string i_filePath)
+        /// <summary>
+        /// Read user settings from file.
+        /// </summary>
+        /// <param name="i_filePath">Path to file.</param>
+        /// <returns>True if user settings exist, false otherwise.</returns>
+        public bool ReadUserInfo(string i_filePath)
         {
-            
-            string xml;
-            
-            using (FileStream file = new FileStream(i_filePath, FileMode.Open))
+            bool readSuccessful = false;
+
+            if (File.Exists(i_filePath))
             {
-               XmlSerializer serializer = new XmlSerializer(typeof(UserInfo)); 
-                s_UserInfoSingalton = (UserInfo)serializer.Deserialize(file);
+                using (FileStream file = new FileStream(i_filePath, FileMode.Open))
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(UserInfo));
+                    s_UserInfoSingleton = (UserInfo)serializer.Deserialize(file);
+                }
+
+                readSuccessful = true;
             }
+
+            return readSuccessful;
         }
     }
 }
