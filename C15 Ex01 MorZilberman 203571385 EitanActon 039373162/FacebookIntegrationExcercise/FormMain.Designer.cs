@@ -190,6 +190,7 @@
             this.connectToTwitchToolStripMenuItem.Text = "Connect to Twitch";
             this.connectToTwitchToolStripMenuItem.ToolTipText = "Lets the user connect his Twitch account to enable automatic FB posts when they g" +
     "o live.";
+            this.connectToTwitchToolStripMenuItem.Click += new System.EventHandler(this.connectToTwitchToolStripMenuItem_Click);
             // 
             // FormMain
             // 

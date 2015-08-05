@@ -113,5 +113,14 @@ namespace FacebookIntegrationExcercise
                 pbEventPic.ImageLocation = fbEvent.PictureNormalURL;
             }
         }
+
+        private void connectToTwitchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ConnectToTwitch twitchConnect = new ConnectToTwitch(UserInfo.Singleton.TwitchUserName, UserInfo.Singleton.AutoPostTwitchUpdates);
+
+            if (twitchConnect.ShowDialog() == DialogResult.OK)
+            {
+            }
+        }
     }
 }
