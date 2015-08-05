@@ -14,6 +14,7 @@ namespace FacebookIntegrationExcercise
         [STAThread]
         static void Main()
         {
+            UserInfo.GetUserInfo().saveUserInfoAsXmlFile("testxml");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new FormMain());
