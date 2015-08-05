@@ -49,8 +49,6 @@ namespace FacebookIntegrationExcercise
             {
                 file.Write(parseUserInfoToXml());
             }
-
-            ReadUserInfo(i_filePath);
         }
 
         public void ReadUserInfo(string i_filePath)
@@ -64,8 +62,8 @@ namespace FacebookIntegrationExcercise
                 s_UserInfoSingalton = (UserInfo)serializer.Deserialize(file);
             }
 
-            XmlSerializer serializer = new XmlSerializer(typeof(UserInfo));
-            MemoryStream memoryStream = new MemoryStream();
+           
+           
         }
     }
 }
