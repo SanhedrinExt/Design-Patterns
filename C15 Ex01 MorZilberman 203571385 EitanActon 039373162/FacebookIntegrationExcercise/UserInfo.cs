@@ -32,7 +32,7 @@ namespace FacebookIntegrationExcercise
         public string AccessToken { set; get; }
 
 
-        private string ParseUuserInfoToXml()
+        private string parseUuserInfoToXml()
         {
             XmlSerializer serializer = new XmlSerializer(typeof(UserInfo));
             MemoryStream memoryStream = new MemoryStream();
@@ -43,25 +43,25 @@ namespace FacebookIntegrationExcercise
             return xml;
         }
         
-        public void saveUserInfoAsXmlFile(string i_filePath)
+        public void SaveUserInfoAsXmlFile(string i_filePath)
         {
-            string path = string.Format("{0}{1}{2}", Environment.CurrentDirectory, Path.DirectorySeparatorChar, i_filePath);
-
-            using (StreamWriter file = new StreamWriter(path))
+            using (StreamWriter file = new StreamWriter(i_filePath))
             {
-                file.Write(ParseUuserInfoToXml());
+                file.Write(parseUuserInfoToXml());
             }
+
             ReadUserInfo(i_filePath);
         }
 
         public void ReadUserInfo(string i_filePath)
         {
             string xml;
-            string path = string.Format("{0}{1}{2}", Environment.CurrentDirectory, Path.DirectorySeparatorChar, i_filePath);
-            using (StreamReader file = new StreamReader(path))
+            
+            using (StreamReader file = new StreamReader(i_filePath))
             {
                 xml = file.ReadToEnd();
             }
+
             XmlSerializer serializer = new XmlSerializer(typeof(UserInfo));
             MemoryStream memoryStream = new MemoryStream();
 
