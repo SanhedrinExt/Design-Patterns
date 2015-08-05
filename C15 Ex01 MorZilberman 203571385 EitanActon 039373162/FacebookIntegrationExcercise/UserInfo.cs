@@ -32,7 +32,7 @@ namespace FacebookIntegrationExcercise
         public string AccessToken { set; get; }
 
 
-        private string parseUuserInfoToXml()
+        private string parseUserInfoToXml()
         {
             XmlSerializer serializer = new XmlSerializer(typeof(UserInfo));
             MemoryStream memoryStream = new MemoryStream();
@@ -47,7 +47,7 @@ namespace FacebookIntegrationExcercise
         {
             using (StreamWriter file = new StreamWriter(i_filePath))
             {
-                file.Write(parseUuserInfoToXml());
+                file.Write(parseUserInfoToXml());
             }
 
             ReadUserInfo(i_filePath);
@@ -55,16 +55,17 @@ namespace FacebookIntegrationExcercise
 
         public void ReadUserInfo(string i_filePath)
         {
+            
             string xml;
             
-            using (StreamReader file = new StreamReader(i_filePath))
+            using (FileStream file = new FileStream(i_filePath, FileMode.Open))
             {
-                xml = file.ReadToEnd();
+               XmlSerializer serializer = new XmlSerializer(typeof(UserInfo)); 
+                s_UserInfoSingalton = (UserInfo)serializer.Deserialize(file);
             }
 
             XmlSerializer serializer = new XmlSerializer(typeof(UserInfo));
             MemoryStream memoryStream = new MemoryStream();
-
         }
     }
 }
