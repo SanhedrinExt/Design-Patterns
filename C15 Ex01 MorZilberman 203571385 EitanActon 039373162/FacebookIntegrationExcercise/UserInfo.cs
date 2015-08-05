@@ -56,15 +56,14 @@ namespace FacebookIntegrationExcercise
 
         public void ReadUserInfo(string i_filePath)
         {
+            
             string xml;
             string path = string.Format("{0}{1}{2}", Environment.CurrentDirectory, Path.DirectorySeparatorChar, i_filePath);
-            using (StreamReader file = new StreamReader(path))
+            using (FileStream file = new FileStream(path, FileMode.Open))
             {
-                xml = file.ReadToEnd();
+               XmlSerializer serializer = new XmlSerializer(typeof(UserInfo)); 
+                s_UserInfoSingalton = (UserInfo)serializer.Deserialize(file);
             }
-            XmlSerializer serializer = new XmlSerializer(typeof(UserInfo));
-            MemoryStream memoryStream = new MemoryStream();
-
         }
     }
 }
