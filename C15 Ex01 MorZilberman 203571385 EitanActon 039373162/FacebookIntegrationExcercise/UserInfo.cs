@@ -17,19 +17,25 @@ namespace FacebookIntegrationExcercise
 
         private UserInfo(){}
 
-        public static UserInfo GetUserInfo()
+        public static UserInfo Singleton
         {
-            if(s_UserInfoSingalton == null)
+            get
             {
-                s_UserInfoSingalton = new UserInfo();
+                if (s_UserInfoSingalton == null)
+                {
+                    s_UserInfoSingalton = new UserInfo();
+                }
+
+                return s_UserInfoSingalton;
             }
-            return s_UserInfoSingalton;
         }
 
         public Point Location { set; get; }
         public Size Size { set; get; }
         public bool AutoLogIn { set; get; }
         public string AccessToken { set; get; }
+        public string TwitchUserName { get; set; }
+        public bool AutoPostTwitchUpdates { get; set; }
 
 
         private string parseUserInfoToXml()
@@ -37,7 +43,7 @@ namespace FacebookIntegrationExcercise
             XmlSerializer serializer = new XmlSerializer(typeof(UserInfo));
             MemoryStream memoryStream = new MemoryStream();
 
-            serializer.Serialize(memoryStream, GetUserInfo());
+            serializer.Serialize(memoryStream, Singleton);
             memoryStream.Position = 0;
             string xml = new StreamReader(memoryStream).ReadToEnd();
             return xml;
@@ -63,9 +69,6 @@ namespace FacebookIntegrationExcercise
                XmlSerializer serializer = new XmlSerializer(typeof(UserInfo)); 
                 s_UserInfoSingalton = (UserInfo)serializer.Deserialize(file);
             }
-
-            XmlSerializer serializer = new XmlSerializer(typeof(UserInfo));
-            MemoryStream memoryStream = new MemoryStream();
         }
     }
 }
