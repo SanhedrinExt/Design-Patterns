@@ -60,6 +60,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ConnectToTwitch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConnectToTwitch.Designer.cs">
+      <DependentUpon>ConnectToTwitch.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserInfo.cs" />
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
@@ -73,6 +79,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ConnectToTwitch.resx">
+      <DependentUpon>ConnectToTwitch.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
