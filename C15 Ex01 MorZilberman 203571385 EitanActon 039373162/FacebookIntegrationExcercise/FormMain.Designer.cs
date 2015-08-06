@@ -247,7 +247,7 @@
             this.massRSVPEventsToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.massRSVPEventsToolStripMenuItem.Text = "Mass RSVP events";
             this.massRSVPEventsToolStripMenuItem.ToolTipText = "Fetches the list of events you haven\'t RSVPd to, and lets you mass response.";
-            this.massRSVPEventsToolStripMenuItem.Click += new System.EventHandler(this.unsubscribeInactiveEventsToolStripMenuItem_Click);
+            this.massRSVPEventsToolStripMenuItem.Click += new System.EventHandler(this.massEventRSVPToolStripMenuItem_Click);
             // 
             // FormMain
             // 

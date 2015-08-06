@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace FacebookIntegrationExcercise
 {
-    public partial class ConnectToTwitch : Form
+    public partial class ConnectToTwitchForm : Form
     {
         /// <summary>
         /// Do we want to autopost to Facebook on the user's behalf?
@@ -34,7 +34,7 @@ namespace FacebookIntegrationExcercise
             }
         }
 
-        public ConnectToTwitch(string i_UserName, bool i_AutoPost)
+        public ConnectToTwitchForm(string i_UserName, bool i_AutoPost)
         {
             InitializeComponent();
 

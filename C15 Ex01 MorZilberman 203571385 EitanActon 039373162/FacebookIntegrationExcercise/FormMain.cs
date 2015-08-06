@@ -162,7 +162,7 @@ namespace FacebookIntegrationExcercise
 
         private void connectToTwitchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ConnectToTwitch twitchConnect = new ConnectToTwitch(UserInfo.Singleton.TwitchUserName, UserInfo.Singleton.AutoPostTwitchUpdates);
+            ConnectToTwitchForm twitchConnect = new ConnectToTwitchForm(UserInfo.Singleton.TwitchUserName, UserInfo.Singleton.AutoPostTwitchUpdates);
 
             if (twitchConnect.ShowDialog() == DialogResult.OK)
             {
@@ -241,11 +241,11 @@ namespace FacebookIntegrationExcercise
             }
         }
 
-        private void unsubscribeInactiveEventsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void massEventRSVPToolStripMenuItem_Click(object sender, EventArgs e)
         {
             m_LoggedInUser.ReFetch(DynamicWrapper.eLoadOptions.FullWithConnections);
 
-            EventResponder eventResponder = new EventResponder(m_LoggedInUser.EventsNotYetReplied);
+            EventResponderForm eventResponder = new EventResponderForm(m_LoggedInUser.EventsNotYetReplied);
 
             if (eventResponder.ShowDialog() == DialogResult.OK)
             {

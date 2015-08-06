@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace FacebookIntegrationExcercise
 {
-    public partial class EventResponder : Form
+    public partial class EventResponderForm : Form
     {
         private const bool v_CheckItem = true;
 
@@ -24,7 +24,7 @@ namespace FacebookIntegrationExcercise
         /// </summary>
         public Event.eRsvpType SelectedRSVPStatus { get; private set; }
 
-        public EventResponder(FacebookObjectCollection<Event> i_FacebookObjectCollection)
+        public EventResponderForm(FacebookObjectCollection<Event> i_FacebookObjectCollection)
         {
             InitializeComponent();
 
