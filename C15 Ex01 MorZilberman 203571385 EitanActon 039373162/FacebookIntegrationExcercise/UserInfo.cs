@@ -7,12 +7,15 @@ using System.Drawing;
 using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
+using System.Windows.Forms;
 
 namespace FacebookIntegrationExcercise
 {
-    public class UserInfo
+    public sealed class UserInfo
     {
         private static UserInfo s_UserInfoSingleton = null;
+
+        private static readonly object sr_SingletonCreationLock = new object();
 
         public Point Location { set; get; }
         public Size Size { set; get; }
@@ -34,7 +37,13 @@ namespace FacebookIntegrationExcercise
             {
                 if (s_UserInfoSingleton == null)
                 {
-                    s_UserInfoSingleton = new UserInfo();
+                    lock (sr_SingletonCreationLock)
+                    {
+                        if (s_UserInfoSingleton == null)
+                        {
+                            s_UserInfoSingleton = new UserInfo();
+                        }
+                    }
                 }
 
                 return s_UserInfoSingleton;
@@ -49,8 +58,8 @@ namespace FacebookIntegrationExcercise
 
             serializer.Serialize(memoryStream, Singleton);
             memoryStream.Position = 0;
-            string xml = new StreamReader(memoryStream).ReadToEnd();
-            return xml;
+
+            return new StreamReader(memoryStream).ReadToEnd();
         }
         
         /// <summary>
@@ -61,7 +70,14 @@ namespace FacebookIntegrationExcercise
         {
             using (StreamWriter file = new StreamWriter(i_filePath))
             {
-                file.Write(parseUserInfoToXml());
+                try
+                {
+                    file.Write(parseUserInfoToXml());
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(string.Format("Error saving to file!{0}The error returned:{0}{1}", Environment.NewLine, exception.Message));
+                }
             }
         }
 
@@ -70,16 +86,23 @@ namespace FacebookIntegrationExcercise
         /// </summary>
         /// <param name="i_filePath">Path to file.</param>
         /// <returns>True if user settings exist, false otherwise.</returns>
-        public bool ReadUserInfo(string i_filePath)
+        public bool ReadUserInfoFromFile(string i_filePath)
         {
             bool readSuccessful = false;
 
             if (File.Exists(i_filePath))
             {
-                using (FileStream file = new FileStream(i_filePath, FileMode.Open))
+                try
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(UserInfo));
-                    s_UserInfoSingleton = (UserInfo)serializer.Deserialize(file);
+                    using (FileStream file = new FileStream(i_filePath, FileMode.Open))
+                    {
+                        XmlSerializer serializer = new XmlSerializer(typeof(UserInfo));
+                        s_UserInfoSingleton = (UserInfo)serializer.Deserialize(file);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(string.Format("Error loading from file!{0}The error returned:{0}{1}", Environment.NewLine, exception.Message));
                 }
 
                 readSuccessful = true;

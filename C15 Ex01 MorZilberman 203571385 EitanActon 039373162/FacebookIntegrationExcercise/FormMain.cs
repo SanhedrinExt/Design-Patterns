@@ -19,12 +19,14 @@ namespace FacebookIntegrationExcercise
         private User m_LoggedInUser = null;
         private const string k_UserInfoPath = "UserInfo.info";
 
+        private readonly object r_TwitchAutoUpdateLock = new object();
+
         public FormMain()
         {
             if (Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length > 1)
             {
                 MessageBox.Show(string.Format("Another instance of this app is already running.{0}Please close the other instance in the system tray to open a new instance", Environment.NewLine), "Multiple instances running", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Environment.Exit(0);
+                Environment.Exit(1);
             }
 
             InitializeComponent();
@@ -33,7 +35,7 @@ namespace FacebookIntegrationExcercise
 
         private void initializeFromUserInfoFile()
         {
-            if (UserInfo.Singleton.ReadUserInfo(k_UserInfoPath))
+            if (UserInfo.Singleton.ReadUserInfoFromFile(k_UserInfoPath))
             {
                 this.Location = UserInfo.Singleton.Location;
                 this.Size = UserInfo.Singleton.Size;
@@ -57,7 +59,6 @@ namespace FacebookIntegrationExcercise
                     catch (Exception exception)
                     {
                         MessageBox.Show(string.Format("Error logging in!{0}The error returned was:{0}{1}", Environment.NewLine, exception.Message), "Net error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        Environment.Exit(0);
                     }
                 }
             }
@@ -88,16 +89,11 @@ namespace FacebookIntegrationExcercise
         private void initUserInfo(User i_LoggedInUser)
         {
             m_LoggedInUser = i_LoggedInUser;
-            fetchUserInfo();
-            buttonLogin.Enabled = false;
-        }
-
-        private void fetchUserInfo()
-        {
             fetchUserProfilePic();
             fetchUserNewsFeed();
             fetchUserFriends();
             fetchUserEvents();
+            buttonLogin.Enabled = false;
         }
 
         private void fetchUserEvents()
@@ -201,13 +197,13 @@ namespace FacebookIntegrationExcercise
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (UserInfo.Singleton.AutoPostTwitchUpdates && !string.IsNullOrEmpty(UserInfo.Singleton.TwitchUserName))
+            if (e.CloseReason == CloseReason.UserClosing && UserInfo.Singleton.AutoPostTwitchUpdates && !string.IsNullOrEmpty(UserInfo.Singleton.TwitchUserName))
             {
                 this.Visible = false;
                 notifyIconTwitchService.ShowBalloonTip(1000, "Facebook App is still running", "Right click this notification icon to open or close the app", ToolTipIcon.Info);
                 e.Cancel = true;
             }
-            else
+            else if(e.CloseReason == CloseReason.ApplicationExitCall || !UserInfo.Singleton.AutoPostTwitchUpdates || string.IsNullOrEmpty(UserInfo.Singleton.TwitchUserName))
             {
                 UserInfo.Singleton.SaveUserInfoAsXmlFile(k_UserInfoPath);
             }
@@ -215,8 +211,7 @@ namespace FacebookIntegrationExcercise
 
         private void toolStripMenuItemExitFacebookApp_Click(object sender, EventArgs e)
         {
-            UserInfo.Singleton.SaveUserInfoAsXmlFile(k_UserInfoPath);
-            Environment.Exit(0);
+            Application.Exit();
         }
 
         private void toolStripMenuItemOpenFacebookApp_Click(object sender, EventArgs e)
@@ -226,25 +221,29 @@ namespace FacebookIntegrationExcercise
 
         private void timerTwitchUpdateChecker_Tick(object sender, EventArgs e)
         {
-            if (UserInfo.Singleton.AutoPostTwitchUpdates && !string.IsNullOrEmpty(UserInfo.Singleton.TwitchUserName))
+            Thread autoUpdateThread = new Thread(new ThreadStart(AutoPostTwitchUpdate));
+            autoUpdateThread.Start();
+        }
+
+        private void AutoPostTwitchUpdate()
+        {
+            //A lock on the entire method is ok since we don't want to post twice about the event.
+            lock (r_TwitchAutoUpdateLock)
             {
-                try
+                if (UserInfo.Singleton.AutoPostTwitchUpdates && !string.IsNullOrEmpty(UserInfo.Singleton.TwitchUserName))
                 {
                     if (TwitchAPIWrapper.CheckIfStreamStarted(UserInfo.Singleton.TwitchUserName))
                     {
                         m_LoggedInUser.PostStatus(string.Format("I have just gone online!{0}Come watch me at:{0}{1}{2}", Environment.NewLine, TwitchAPIWrapper.TwitchBaseAddress, UserInfo.Singleton.TwitchUserName));
                     }
                 }
-                catch (Exception exception)
-                {
-                    MessageBox.Show(string.Format("Error logging in!{0}The error returned was:{0}{1}", Environment.NewLine, exception.Message), "Net error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
             }
         }
 
         private void unsubscribeInactiveEventsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            m_LoggedInUser.ReFetch();
+            m_LoggedInUser.ReFetch(DynamicWrapper.eLoadOptions.FullWithConnections);
+
             EventResponder eventResponder = new EventResponder(m_LoggedInUser.EventsNotYetReplied);
 
             if (eventResponder.ShowDialog() == DialogResult.OK)
