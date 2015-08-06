@@ -235,6 +235,7 @@ namespace FacebookIntegrationExcercise
                     if (TwitchAPIWrapper.CheckIfStreamStarted(UserInfo.Singleton.TwitchUserName))
                     {
                         m_LoggedInUser.PostStatus(string.Format("I have just gone online!{0}Come watch me at:{0}{1}{2}", Environment.NewLine, TwitchAPIWrapper.TwitchBaseAddress, UserInfo.Singleton.TwitchUserName));
+                        notifyIconTwitchService.ShowBalloonTip(1000, "Facebook update posted!", "A post linking to your newly started stream had been posted to your Facebook page", ToolTipIcon.Info);
                     }
                 }
             }
