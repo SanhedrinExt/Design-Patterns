@@ -28,11 +28,16 @@ namespace FacebookIntegrationExcercise
         {
             InitializeComponent();
 
+            initChakBoxVal(i_FacebookObjectCollection);
+        }
+
+        private void initChakBoxVal(FacebookObjectCollection<Event> i_FacebookObjectCollection)
+        {
             checkedListBoxEvents.DisplayMember = "Name";
 
             foreach (Event fbEvent in i_FacebookObjectCollection)
             {
-                if(fbEvent.StartTime != null && (DateTime.Now.CompareTo(fbEvent.StartTime) < 0))
+                if (fbEvent.StartTime != null && (DateTime.Now.CompareTo(fbEvent.StartTime) < 0))
                 {
                     checkedListBoxEvents.Items.Add(fbEvent);
                     checkedListBoxEvents.SetItemChecked(checkedListBoxEvents.Items.Count - 1, true);
