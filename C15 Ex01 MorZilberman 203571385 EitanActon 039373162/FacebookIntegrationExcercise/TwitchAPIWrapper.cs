@@ -64,5 +64,21 @@ namespace FacebookIntegrationExcercise
 
             return streamStarted;
         }
+
+        public static bool CheckIfChannelExists(string i_ChannelName)
+        {
+            bool channelExists = true;
+
+            try
+            {
+                WebRequest.Create(string.Format("{0}{1}", TwitchAPIStreamPath, i_ChannelName)).GetResponse();
+            }
+            catch (WebException webException)
+            {
+                channelExists = false;
+            }
+            
+            return channelExists;
+        }
     }
 }

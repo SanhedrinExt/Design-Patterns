@@ -44,7 +44,21 @@ namespace FacebookIntegrationExcercise
 
         private void buttonOk_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
+            if (!(checkBoxAutoPost.Checked && string.IsNullOrEmpty(textBoxUserName.Text)))
+            {
+                if (!checkBoxAutoPost.Checked || TwitchAPIWrapper.CheckIfChannelExists(textBoxUserName.Text))
+                {
+                    this.DialogResult = DialogResult.OK;
+                }
+                else
+                {
+                    MessageBox.Show(string.Format("Twitch channel named {0} doesn't exist", textBoxUserName.Text));
+                }
+            }
+            else
+            {
+                MessageBox.Show("Can't enable autoconnect without specifying a channel");
+            }
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
