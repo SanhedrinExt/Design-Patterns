@@ -45,21 +45,28 @@ namespace FacebookIntegrationExcercise
         {
             bool streamStarted = false;
 
-            using (Stream responseStream = WebRequest.Create(string.Format("{0}{1}", TwitchAPIStreamPath, i_ChannelName)).GetResponse().GetResponseStream())
+            try
             {
-                string apiResponse = new StreamReader(responseStream).ReadToEnd();
-                JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
-                TwitchStream twitchStreamObject = jsonSerializer.Deserialize<TwitchStream>(apiResponse);
+                using (Stream responseStream = WebRequest.Create(string.Format("{0}{1}", TwitchAPIStreamPath, i_ChannelName)).GetResponse().GetResponseStream())
+                {
+                    string apiResponse = new StreamReader(responseStream).ReadToEnd();
+                    JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
+                    TwitchStream twitchStreamObject = jsonSerializer.Deserialize<TwitchStream>(apiResponse);
 
-                if (twitchStreamObject.stream != null && !m_IsStreamRunning)
-                {
-                    streamStarted = true;
-                    m_IsStreamRunning = true;
+                    if (twitchStreamObject.stream != null && !m_IsStreamRunning)
+                    {
+                        streamStarted = true;
+                        m_IsStreamRunning = true;
+                    }
+                    else if (twitchStreamObject.stream == null)
+                    {
+                        m_IsStreamRunning = false;
+                    }
                 }
-                else if (twitchStreamObject.stream == null)
-                {
-                    m_IsStreamRunning = false;
-                }
+            }
+            catch (WebException webEx)
+            {
+                streamStarted = false;
             }
 
             return streamStarted;
