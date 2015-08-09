@@ -5,6 +5,12 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacebookIntegrationExcercise", "FacebookIntegrationExcercise\FacebookIntegrationExcercise.csproj", "{0BF4C07C-F148-4523-B121-C50E91CCC663}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8702AA9D-BC2A-4EB4-A6AA-7746F4C54E0B}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\Downloads\Design Patterns ex01.docx = ..\..\..\Downloads\Design Patterns ex01.docx
+		..\..\..\Downloads\Submission Details.txt = ..\..\..\Downloads\Submission Details.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
