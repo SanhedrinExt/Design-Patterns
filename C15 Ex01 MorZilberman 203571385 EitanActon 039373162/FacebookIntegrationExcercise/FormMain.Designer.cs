@@ -31,30 +31,36 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.buttonLogin = new System.Windows.Forms.Button();
-            this.pbUserProfilePic = new System.Windows.Forms.PictureBox();
             this.listBoxNewsFeed = new System.Windows.Forms.ListBox();
+            this.postBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.listBoxFriends = new System.Windows.Forms.ListBox();
-            this.pbFriendPicture = new System.Windows.Forms.PictureBox();
+            this.userBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.listBoxEvents = new System.Windows.Forms.ListBox();
+            this.eventBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label3 = new System.Windows.Forms.Label();
-            this.pbEventPic = new System.Windows.Forms.PictureBox();
             this.checkBoxStayLoggedIn = new System.Windows.Forms.CheckBox();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.advancedFeaturesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectToTwitchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.massRSVPEventsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notifyIconTwitchService = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStripSystemTray = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemOpenFacebookApp = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExitFacebookApp = new System.Windows.Forms.ToolStripMenuItem();
             this.timerTwitchUpdateChecker = new System.Windows.Forms.Timer(this.components);
-            this.massRSVPEventsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.pbUserProfilePic)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbFriendPicture)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbEventPic)).BeginInit();
+            this.pbUserProfilePic = new System.Windows.Forms.PictureBox();
+            this.pbEventPicture = new System.Windows.Forms.PictureBox();
+            this.pbFriendPicture = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.postBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.userBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eventBindingSource)).BeginInit();
             this.menuStrip.SuspendLayout();
             this.contextMenuStripSystemTray.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbUserProfilePic)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbEventPicture)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbFriendPicture)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonLogin
@@ -67,26 +73,23 @@
             this.buttonLogin.UseVisualStyleBackColor = true;
             this.buttonLogin.Click += new System.EventHandler(this.buttonLogin_Click);
             // 
-            // pbUserProfilePic
-            // 
-            this.pbUserProfilePic.Location = new System.Drawing.Point(12, 68);
-            this.pbUserProfilePic.Name = "pbUserProfilePic";
-            this.pbUserProfilePic.Size = new System.Drawing.Size(151, 126);
-            this.pbUserProfilePic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbUserProfilePic.TabIndex = 1;
-            this.pbUserProfilePic.TabStop = false;
-            // 
             // listBoxNewsFeed
             // 
             this.listBoxNewsFeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listBoxNewsFeed.DisplayMember = "name";
+            this.listBoxNewsFeed.DataSource = this.postBindingSource;
+            this.listBoxNewsFeed.DisplayMember = "Message";
             this.listBoxNewsFeed.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxNewsFeed.FormattingEnabled = true;
             this.listBoxNewsFeed.Location = new System.Drawing.Point(172, 86);
             this.listBoxNewsFeed.Name = "listBoxNewsFeed";
-            this.listBoxNewsFeed.Size = new System.Drawing.Size(497, 108);
+            this.listBoxNewsFeed.Size = new System.Drawing.Size(551, 108);
             this.listBoxNewsFeed.TabIndex = 41;
+            this.listBoxNewsFeed.ValueMember = "Caption";
+            // 
+            // postBindingSource
+            // 
+            this.postBindingSource.DataSource = typeof(FacebookWrapper.ObjectModel.Post);
             // 
             // label1
             // 
@@ -110,7 +113,8 @@
             // 
             this.listBoxFriends.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.listBoxFriends.DisplayMember = "name";
+            this.listBoxFriends.DataSource = this.userBindingSource;
+            this.listBoxFriends.DisplayMember = "Name";
             this.listBoxFriends.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxFriends.FormattingEnabled = true;
             this.listBoxFriends.Location = new System.Drawing.Point(12, 233);
@@ -119,22 +123,16 @@
             this.listBoxFriends.TabIndex = 43;
             this.listBoxFriends.SelectedIndexChanged += new System.EventHandler(this.listBoxFriends_SelectedIndexChanged);
             // 
-            // pbFriendPicture
+            // userBindingSource
             // 
-            this.pbFriendPicture.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.pbFriendPicture.Location = new System.Drawing.Point(99, 232);
-            this.pbFriendPicture.Name = "pbFriendPicture";
-            this.pbFriendPicture.Size = new System.Drawing.Size(114, 148);
-            this.pbFriendPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbFriendPicture.TabIndex = 45;
-            this.pbFriendPicture.TabStop = false;
+            this.userBindingSource.DataSource = typeof(FacebookWrapper.ObjectModel.User);
             // 
             // listBoxEvents
             // 
             this.listBoxEvents.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.listBoxEvents.DisplayMember = "name";
+            this.listBoxEvents.DataSource = this.eventBindingSource;
+            this.listBoxEvents.DisplayMember = "Name";
             this.listBoxEvents.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxEvents.FormattingEnabled = true;
             this.listBoxEvents.Location = new System.Drawing.Point(238, 233);
@@ -142,6 +140,10 @@
             this.listBoxEvents.Size = new System.Drawing.Size(311, 147);
             this.listBoxEvents.TabIndex = 46;
             this.listBoxEvents.SelectedIndexChanged += new System.EventHandler(this.listBoxEvents_SelectedIndexChanged);
+            // 
+            // eventBindingSource
+            // 
+            this.eventBindingSource.DataSource = typeof(FacebookWrapper.ObjectModel.Event);
             // 
             // label3
             // 
@@ -151,18 +153,6 @@
             this.label3.Size = new System.Drawing.Size(181, 26);
             this.label3.TabIndex = 47;
             this.label3.Text = "Events\r\n(Click on an event to view its picture)";
-            // 
-            // pbEventPic
-            // 
-            this.pbEventPic.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pbEventPic.Location = new System.Drawing.Point(555, 232);
-            this.pbEventPic.Name = "pbEventPic";
-            this.pbEventPic.Size = new System.Drawing.Size(114, 148);
-            this.pbEventPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbEventPic.TabIndex = 48;
-            this.pbEventPic.TabStop = false;
             // 
             // checkBoxStayLoggedIn
             // 
@@ -181,7 +171,7 @@
             this.advancedFeaturesToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(681, 24);
+            this.menuStrip.Size = new System.Drawing.Size(735, 24);
             this.menuStrip.TabIndex = 50;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -203,6 +193,14 @@
             this.connectToTwitchToolStripMenuItem.ToolTipText = "Lets the user connect his Twitch account to enable automatic FB posts when they g" +
     "o live.";
             this.connectToTwitchToolStripMenuItem.Click += new System.EventHandler(this.connectToTwitchToolStripMenuItem_Click);
+            // 
+            // massRSVPEventsToolStripMenuItem
+            // 
+            this.massRSVPEventsToolStripMenuItem.Name = "massRSVPEventsToolStripMenuItem";
+            this.massRSVPEventsToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.massRSVPEventsToolStripMenuItem.Text = "Mass RSVP events";
+            this.massRSVPEventsToolStripMenuItem.ToolTipText = "Fetches the list of events you haven\'t RSVPd to, and lets you mass response.";
+            this.massRSVPEventsToolStripMenuItem.Click += new System.EventHandler(this.massEventRSVPToolStripMenuItem_Click);
             // 
             // notifyIconTwitchService
             // 
@@ -241,31 +239,56 @@
             this.timerTwitchUpdateChecker.Interval = 10000;
             this.timerTwitchUpdateChecker.Tick += new System.EventHandler(this.timerTwitchUpdateChecker_Tick);
             // 
-            // massRSVPEventsToolStripMenuItem
+            // pbUserProfilePic
             // 
-            this.massRSVPEventsToolStripMenuItem.Name = "massRSVPEventsToolStripMenuItem";
-            this.massRSVPEventsToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.massRSVPEventsToolStripMenuItem.Text = "Mass RSVP events";
-            this.massRSVPEventsToolStripMenuItem.ToolTipText = "Fetches the list of events you haven\'t RSVPd to, and lets you mass response.";
-            this.massRSVPEventsToolStripMenuItem.Click += new System.EventHandler(this.massEventRSVPToolStripMenuItem_Click);
+            this.pbUserProfilePic.Location = new System.Drawing.Point(12, 68);
+            this.pbUserProfilePic.Name = "pbUserProfilePic";
+            this.pbUserProfilePic.Size = new System.Drawing.Size(151, 126);
+            this.pbUserProfilePic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbUserProfilePic.TabIndex = 52;
+            this.pbUserProfilePic.TabStop = false;
+            // 
+            // pbEventPicture
+            // 
+            this.pbEventPicture.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pbEventPicture.Location = new System.Drawing.Point(555, 232);
+            this.pbEventPicture.Name = "pbEventPicture";
+            this.pbEventPicture.Size = new System.Drawing.Size(168, 158);
+            this.pbEventPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbEventPicture.TabIndex = 53;
+            this.pbEventPicture.TabStop = false;
+            // 
+            // pbFriendPicture
+            // 
+            this.pbFriendPicture.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.pbFriendPicture.Location = new System.Drawing.Point(99, 232);
+            this.pbFriendPicture.Name = "pbFriendPicture";
+            this.pbFriendPicture.Size = new System.Drawing.Size(114, 158);
+            this.pbFriendPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbFriendPicture.TabIndex = 54;
+            this.pbFriendPicture.TabStop = false;
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(681, 395);
+            this.ClientSize = new System.Drawing.Size(735, 405);
+            this.Controls.Add(this.pbFriendPicture);
+            this.Controls.Add(this.pbEventPicture);
+            this.Controls.Add(this.pbUserProfilePic);
             this.Controls.Add(this.checkBoxStayLoggedIn);
-            this.Controls.Add(this.pbEventPic);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.listBoxEvents);
-            this.Controls.Add(this.pbFriendPicture);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.listBoxFriends);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.listBoxNewsFeed);
-            this.Controls.Add(this.pbUserProfilePic);
             this.Controls.Add(this.buttonLogin);
             this.Controls.Add(this.menuStrip);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip;
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
@@ -273,12 +296,15 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             this.Move += new System.EventHandler(this.FormMain_Move);
             this.Resize += new System.EventHandler(this.FormMain_Resize);
-            ((System.ComponentModel.ISupportInitialize)(this.pbUserProfilePic)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbFriendPicture)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbEventPic)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.postBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.userBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eventBindingSource)).EndInit();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.contextMenuStripSystemTray.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbUserProfilePic)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbEventPicture)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbFriendPicture)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -287,15 +313,12 @@
         #endregion
 
         private System.Windows.Forms.Button buttonLogin;
-        private System.Windows.Forms.PictureBox pbUserProfilePic;
         private System.Windows.Forms.ListBox listBoxNewsFeed;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ListBox listBoxFriends;
-        private System.Windows.Forms.PictureBox pbFriendPicture;
         private System.Windows.Forms.ListBox listBoxEvents;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.PictureBox pbEventPic;
         private System.Windows.Forms.CheckBox checkBoxStayLoggedIn;
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem advancedFeaturesToolStripMenuItem;
@@ -306,6 +329,12 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExitFacebookApp;
         private System.Windows.Forms.Timer timerTwitchUpdateChecker;
         private System.Windows.Forms.ToolStripMenuItem massRSVPEventsToolStripMenuItem;
+        private System.Windows.Forms.BindingSource userBindingSource;
+        private System.Windows.Forms.PictureBox pbUserProfilePic;
+        private System.Windows.Forms.BindingSource eventBindingSource;
+        private System.Windows.Forms.PictureBox pbEventPicture;
+        private System.Windows.Forms.BindingSource postBindingSource;
+        private System.Windows.Forms.PictureBox pbFriendPicture;
     }
 }
 

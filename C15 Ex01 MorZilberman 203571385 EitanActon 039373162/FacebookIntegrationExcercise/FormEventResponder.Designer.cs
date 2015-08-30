@@ -1,6 +1,6 @@
 ﻿namespace FacebookIntegrationExcercise
 {
-    partial class EventResponderForm
+    partial class FormEventResponder
     {
         /// <summary>
         /// Required designer variable.

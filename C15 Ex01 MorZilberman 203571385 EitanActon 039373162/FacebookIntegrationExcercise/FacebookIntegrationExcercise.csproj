@@ -53,11 +53,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EventResponderForm.cs">
+    <Compile Include="ControlThreadingSupport.cs" />
+    <Compile Include="FormEventResponder.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EventResponderForm.Designer.cs">
-      <DependentUpon>EventResponderForm.cs</DependentUpon>
+    <Compile Include="FormEventResponder.Designer.cs">
+      <DependentUpon>FormEventResponder.cs</DependentUpon>
     </Compile>
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
@@ -67,17 +68,17 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ConnectToTwitchForm.cs">
+    <Compile Include="FormConnectToTwitch.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ConnectToTwitchForm.Designer.cs">
-      <DependentUpon>ConnectToTwitchForm.cs</DependentUpon>
+    <Compile Include="FormConnectToTwitch.Designer.cs">
+      <DependentUpon>FormConnectToTwitch.cs</DependentUpon>
     </Compile>
     <Compile Include="TwitchAPIWrapper.cs" />
     <Compile Include="TwitchStream.cs" />
     <Compile Include="UserInfo.cs" />
-    <EmbeddedResource Include="EventResponderForm.resx">
-      <DependentUpon>EventResponderForm.cs</DependentUpon>
+    <EmbeddedResource Include="FormEventResponder.resx">
+      <DependentUpon>FormEventResponder.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
@@ -91,9 +92,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="ConnectToTwitchForm.resx">
-      <DependentUpon>ConnectToTwitchForm.cs</DependentUpon>
+    <EmbeddedResource Include="FormConnectToTwitch.resx">
+      <DependentUpon>FormConnectToTwitch.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Properties\DataSources\FacebookWrapper.ObjectModel.Event.datasource" />
+    <None Include="Properties\DataSources\FacebookWrapper.ObjectModel.Post.datasource" />
+    <None Include="Properties\DataSources\FacebookWrapper.ObjectModel.User.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -89,49 +89,34 @@ namespace FacebookIntegrationExcercise
         private void initUserInfo(User i_LoggedInUser)
         {
             m_LoggedInUser = i_LoggedInUser;
-            fetchUserProfilePic();
-            fetchUserNewsFeed();
-            fetchUserFriends();
-            fetchUserEvents();
+            startThreaded(fetchUserProfilePic);
+            startThreaded(fetchUserNewsFeed);
+            startThreaded(fetchUserEvents);
+            startThreaded(fetchUserFriends);
             buttonLogin.Enabled = false;
         }
 
         private void fetchUserEvents()
         {
-            listBoxEvents.DisplayMember = "Name";
-
-            foreach (Event fbEvent in m_LoggedInUser.Events)
-            {
-                listBoxEvents.Items.Add(fbEvent);
-            }
+            FacebookObjectCollection<Event> events = m_LoggedInUser.Events;
+            this.ThreadSafeControlUpdate(() => eventBindingSource.DataSource = events);
         }
 
         private void fetchUserNewsFeed()
         {
-            foreach (Post post in m_LoggedInUser.NewsFeed)
-            {
-                if (!string.IsNullOrEmpty(post.From.Name) && !string.IsNullOrEmpty(post.Message))
-                {
-                    listBoxNewsFeed.Items.Add(string.Format("Posted by: {0}", post.From.Name));
-                    listBoxNewsFeed.Items.Add(post.Message);
-                    listBoxNewsFeed.Items.Add(" ");
-                }
-            }
+            FacebookObjectCollection<Post> posts = m_LoggedInUser.NewsFeed;
+            this.ThreadSafeControlUpdate(() => postBindingSource.DataSource = posts);
         }
 
         private void fetchUserFriends()
         {
-            listBoxFriends.DisplayMember = "Name";
-
-            foreach (User user in m_LoggedInUser.Friends)
-            {
-                listBoxFriends.Items.Add(user);
-            }
+            FacebookObjectCollection<User> friends = m_LoggedInUser.Friends;
+            this.ThreadSafeControlUpdate(() => userBindingSource.DataSource = friends);
         }
 
         private void fetchUserProfilePic()
         {
-            pbUserProfilePic.LoadAsync(m_LoggedInUser.PictureNormalURL);
+            this.ThreadSafeControlUpdate(() => pbUserProfilePic.LoadAsync(m_LoggedInUser.PictureNormalURL));
         }
 
         private void buttonLogin_Click(object sender, EventArgs e)
@@ -142,27 +127,9 @@ namespace FacebookIntegrationExcercise
             }
         }
 
-        private void listBoxFriends_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (listBoxFriends.SelectedItem != null)
-            {
-                User friend = listBoxFriends.SelectedItem as User;
-                pbFriendPicture.LoadAsync(friend.PictureNormalURL);
-            }
-        }
-
-        private void listBoxEvents_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (listBoxEvents.SelectedItem != null)
-            {
-                Event fbEvent = listBoxEvents.SelectedItem as Event;
-                pbEventPic.LoadAsync(fbEvent.PictureNormalURL);
-            }
-        }
-
         private void connectToTwitchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ConnectToTwitchForm twitchConnect = new ConnectToTwitchForm(UserInfo.Singleton.TwitchUserName, UserInfo.Singleton.AutoPostTwitchUpdates);
+            FormConnectToTwitch twitchConnect = new FormConnectToTwitch(UserInfo.Singleton.TwitchUserName, UserInfo.Singleton.AutoPostTwitchUpdates);
 
             if (twitchConnect.ShowDialog() == DialogResult.OK)
             {
@@ -178,6 +145,22 @@ namespace FacebookIntegrationExcercise
                 MessageBox.Show("Please log in to use advanced features!", "Not logged in", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 advancedFeaturesToolStripMenuItem.HideDropDown();
             }
+        }
+
+        private void listBoxFriends_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            startThreaded(() =>
+            {
+                this.ThreadSafeControlUpdate(() => pbFriendPicture.LoadAsync((listBoxFriends.SelectedItem as User).PictureNormalURL));
+            });
+        }
+
+        private void listBoxEvents_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            startThreaded(() =>
+            {
+                this.ThreadSafeControlUpdate(() => pbEventPicture.LoadAsync((listBoxEvents.SelectedItem as Event).PictureNormalURL));
+            });
         }
 
         private void FormMain_Move(object sender, EventArgs e)
@@ -206,12 +189,18 @@ namespace FacebookIntegrationExcercise
             else if(e.CloseReason == CloseReason.ApplicationExitCall || !UserInfo.Singleton.AutoPostTwitchUpdates || string.IsNullOrEmpty(UserInfo.Singleton.TwitchUserName))
             {
                 UserInfo.Singleton.SaveUserInfoAsXmlFile(k_UserInfoPath);
+                exitApplication();
             }
         }
 
         private void toolStripMenuItemExitFacebookApp_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            exitApplication();
+        }
+
+        private void exitApplication()
+        {
+            Environment.Exit(0);
         }
 
         private void toolStripMenuItemOpenFacebookApp_Click(object sender, EventArgs e)
@@ -245,7 +234,7 @@ namespace FacebookIntegrationExcercise
         {
             m_LoggedInUser.ReFetch(DynamicWrapper.eLoadOptions.FullWithConnections);
 
-            EventResponderForm eventResponder = new EventResponderForm(m_LoggedInUser.EventsNotYetReplied);
+            FormEventResponder eventResponder = new FormEventResponder(m_LoggedInUser.EventsNotYetReplied);
 
             if (eventResponder.ShowDialog() == DialogResult.OK)
             {
@@ -256,6 +245,13 @@ namespace FacebookIntegrationExcercise
 
                 MessageBox.Show("Responded successfuly");
             }
+        }
+
+        private void startThreaded(ThreadStart i_ActionToThread)
+        {
+            Thread thread = new Thread(i_ActionToThread);
+            thread.IsBackground = true;
+            thread.Start();
         }
     }
 }

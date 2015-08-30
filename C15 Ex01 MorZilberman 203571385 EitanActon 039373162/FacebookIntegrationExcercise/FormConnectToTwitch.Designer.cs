@@ -1,6 +1,6 @@
 ﻿namespace FacebookIntegrationExcercise
 {
-    partial class ConnectToTwitchForm
+    partial class FormConnectToTwitch
     {
         /// <summary>
         /// Required designer variable.
