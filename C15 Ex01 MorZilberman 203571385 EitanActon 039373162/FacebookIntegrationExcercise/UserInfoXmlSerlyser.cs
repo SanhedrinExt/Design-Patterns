@@ -32,7 +32,7 @@ namespace FacebookIntegrationExcercise
         public override Object Deserialize(Stream i_Stream, Type i_Type)
         {
             Object deserialzedObject = null;
-            if (i_Stream == null)
+            if (i_Stream != null)
             {
                 deserialzedObject = deSerializeXml(i_Stream, i_Type);
             }

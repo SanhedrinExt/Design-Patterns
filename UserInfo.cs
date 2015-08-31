@@ -8,12 +8,15 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
 using System.Windows.Forms;
-using System.Reflection;
 
 namespace FacebookIntegrationExcercise
 {
     public sealed class UserInfo
     {
+        private static UserInfo s_UserInfoSingleton = null;
+
+        private static readonly object sr_SingletonCreationLock = new object();
+
         private UserInfoDataManger m_DataManger;
 
         public Point Location { set; get; }
@@ -28,6 +31,27 @@ namespace FacebookIntegrationExcercise
             m_DataManger = new UserInfoDataManger() { m_DataManger = new FileManager(), m_Serializer = new MyXmlSerializer() };
         }
 
+        /// <summary>
+        /// Gets the singleton instance of the userinfo.
+        /// </summary>
+        public static UserInfo Singleton
+        {
+            get
+            {
+                if (s_UserInfoSingleton == null)
+                {
+                    lock (sr_SingletonCreationLock)
+                    {
+                        if (s_UserInfoSingleton == null)
+                        {
+                            s_UserInfoSingleton = new UserInfo();
+                        }
+                    }
+                }
+
+                return s_UserInfoSingleton;
+            }
+        }
         public void SaveUserInfo(string i_Path)
         {
             m_DataManger.SaveUserInfo(i_Path, this);
@@ -35,21 +59,10 @@ namespace FacebookIntegrationExcercise
 
         public bool LoadUserInfo(string i_filePath)
         {
-            UserInfo userInfoSingleton = (SingletonFactory.GetSingleton(typeof(UserInfo)) as UserInfo);
-            userInfoSingleton.populateUserInfo(m_DataManger.loadUserInfo(i_filePath));
 
-            return userInfoSingleton != null;
-        }
+            s_UserInfoSingleton = m_DataManger.loadUserInfo(i_filePath);
 
-        private void populateUserInfo(UserInfo i_UserInfo)
-        {
-            if (i_UserInfo != null)
-            {
-                foreach (PropertyInfo property in typeof(UserInfo).GetProperties())
-                {
-                    property.SetValue(this, property.GetValue(i_UserInfo));
-                }
-            }
+            return s_UserInfoSingleton != null;
         }
     }
 }

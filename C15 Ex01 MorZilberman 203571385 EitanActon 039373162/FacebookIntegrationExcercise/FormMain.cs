@@ -35,7 +35,7 @@ namespace FacebookIntegrationExcercise
         private void initializeFromUserInfoFile()
         {
             UserInfo userInfoSingleton = (SingletonFactory.GetSingleton(typeof(UserInfo)) as UserInfo);
-            if (userInfoSingleton.ReadUserInfoFromFile(k_UserInfoPath))
+            if (userInfoSingleton.LoadUserInfo(k_UserInfoPath))
             {
                 this.Location = userInfoSingleton.Location;
                 this.Size = userInfoSingleton.Size;
@@ -192,7 +192,7 @@ namespace FacebookIntegrationExcercise
             }
             else if(e.CloseReason == CloseReason.ApplicationExitCall || !userInfoSingleton.AutoPostTwitchUpdates || string.IsNullOrEmpty(userInfoSingleton.TwitchUserName))
             {
-                userInfoSingleton.SaveUserInfoAsXmlFile(k_UserInfoPath);
+                userInfoSingleton.SaveUserInfo(k_UserInfoPath);
                 exitApplication();
             }
         }
