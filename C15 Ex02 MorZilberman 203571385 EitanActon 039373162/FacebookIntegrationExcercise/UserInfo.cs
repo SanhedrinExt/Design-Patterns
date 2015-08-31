@@ -14,7 +14,7 @@ namespace FacebookIntegrationExcercise
 {
     public sealed class UserInfo
     {
-        private UserInfoDataManger m_DataManger;
+        private UserInfoDataManger m_DataManager;
 
         public Point Location { set; get; }
         public Size Size { set; get; }
@@ -25,18 +25,18 @@ namespace FacebookIntegrationExcercise
 
         private UserInfo()
         {
-            m_DataManger = new UserInfoDataManger() { m_DataManger = new FileManager(), m_Serializer = new MyXmlSerializer() };
+            m_DataManager = new UserInfoDataManger() { DataManager = new FileManager(), Serializer = new GeneralPurposeXmlSerializer() };
         }
 
         public void SaveUserInfo(string i_Path)
         {
-            m_DataManger.SaveUserInfo(i_Path, this);
+            m_DataManager.SaveUserInfo(i_Path, this);
         }
 
         public bool LoadUserInfo(string i_filePath)
         {
             UserInfo userInfoSingleton = (SingletonFactory.GetSingleton(typeof(UserInfo)) as UserInfo);
-            userInfoSingleton.populateUserInfo(m_DataManger.loadUserInfo(i_filePath));
+            userInfoSingleton.populateUserInfo(m_DataManager.LoadUserInfo(i_filePath));
 
             return userInfoSingleton != null;
         }

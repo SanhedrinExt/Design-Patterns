@@ -18,9 +18,9 @@ namespace FacebookIntegrationExcercise
             SaveDataToFile(i_Path, i_Data);
         }
 
-        private void SaveDataToFile(string i_filePath, string i_Data)
+        private void SaveDataToFile(string i_FilePath, string i_Data)
         {
-            using (StreamWriter file = new StreamWriter(i_filePath))
+            using (StreamWriter file = new StreamWriter(i_FilePath))
             {
                 try
                 {
@@ -33,22 +33,23 @@ namespace FacebookIntegrationExcercise
             }
         }
 
-        public override Object LoadData(string i_path,ISerializer i_serialzer,Type type)
+        public override Object LoadData(string i_Path,ISerializer i_Serialzer,Type i_Type)
         {
-            return ReadFromFile(i_path, i_serialzer, type);
+            return ReadFromFile(i_Path, i_Serialzer, i_Type);
         }
 
-        private Object ReadFromFile(string i_filePath, ISerializer i_serialzer, Type type)
+        private Object ReadFromFile(string i_FilePath, ISerializer i_Serialzer, Type i_Type)
         {
-            Object deserializedObject = null;
+            object deserializedObject = null;
             FileStream file;
-            if (File.Exists(i_filePath))
+
+            if (File.Exists(i_FilePath))
             {
                 try
                 {
-                    using (file = new FileStream(i_filePath, FileMode.Open))
+                    using (file = new FileStream(i_FilePath, FileMode.Open))
                     {
-                       deserializedObject = i_serialzer.Deserialize(file, type);
+                       deserializedObject = i_Serialzer.Deserialize(file, i_Type);
                     }
                 }
                 catch (Exception exception)
@@ -56,6 +57,7 @@ namespace FacebookIntegrationExcercise
                     MessageBox.Show(string.Format("Error loading from file!{0}The error returned:{0}{1}", Environment.NewLine, exception.Message));
                 }
             }
+
             return deserializedObject;
         }
     }

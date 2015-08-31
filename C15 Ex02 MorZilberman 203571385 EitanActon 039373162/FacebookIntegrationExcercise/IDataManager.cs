@@ -16,7 +16,7 @@ namespace FacebookIntegrationExcercise
     {
         public abstract void SaveData(string i_Path, string i_Data);
 
-        public abstract Object LoadData(string i_path, ISerializer i_serialzer, Type type);
+        public abstract object LoadData(string i_Path, ISerializer i_Serialzer, Type type);
 
     }
 }

@@ -11,14 +11,14 @@ using System.Windows.Forms;
 
 namespace FacebookIntegrationExcercise
 {
-    public class MyXmlSerializer : ISerializer
+    public class GeneralPurposeXmlSerializer : ISerializer
     {
-        public override string Serialize(Object i_ObjectToSerialize, Type i_Type)
+        public override string Serialize(object i_ObjectToSerialize, Type i_Type)
         {
             return parseObjectToXml(i_ObjectToSerialize, i_Type);
         }
 
-        private string parseObjectToXml(Object i_ObjectToSerialize, Type i_Type)
+        private string parseObjectToXml(object i_ObjectToSerialize, Type i_Type)
         {
             XmlSerializer serializer = new XmlSerializer(i_Type);
             MemoryStream memoryStream = new MemoryStream();
@@ -29,19 +29,22 @@ namespace FacebookIntegrationExcercise
             return new StreamReader(memoryStream).ReadToEnd();
         }
 
-        public override Object Deserialize(Stream i_Stream, Type i_Type)
+        public override object Deserialize(Stream i_Stream, Type i_Type)
         {
-            Object deserialzedObject = null;
+            object deserializedObject = null;
+
             if (i_Stream != null)
             {
-                deserialzedObject = deSerializeXml(i_Stream, i_Type);
+                deserializedObject = DeserializeXml(i_Stream, i_Type);
             }
-            return deserialzedObject;
+
+            return deserializedObject;
         }
 
-        private Object deSerializeXml(Stream i_Stream, Type i_Type)
+        private object DeserializeXml(Stream i_Stream, Type i_Type)
         {
             XmlSerializer serializer = new XmlSerializer(i_Type);
+
             return serializer.Deserialize(i_Stream);
         }
     }

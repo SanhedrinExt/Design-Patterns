@@ -55,7 +55,7 @@
   <ItemGroup>
     <Compile Include="ControlThreadingSupport.cs" />
     <Compile Include="FbApiMultiFormAdapter.cs" />
-    <Compile Include="FileManger.cs" />
+    <Compile Include="FileManager.cs" />
     <Compile Include="FormEventResponder.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -68,7 +68,7 @@
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="IdataManger.cs" />
+    <Compile Include="IDataManager.cs" />
     <Compile Include="IFacebookConnection.cs" />
     <Compile Include="ISerializer.cs" />
     <Compile Include="ITwitchFunctionalityProvider.cs" />
@@ -85,7 +85,7 @@
     <Compile Include="TwitchForFacebookProxy.cs" />
     <Compile Include="UserInfo.cs" />
     <Compile Include="UserInfoDataManger.cs" />
-    <Compile Include="UserInfoXmlSerlyser.cs" />
+    <Compile Include="GeneralPurposeXmlSerializer.cs" />
     <EmbeddedResource Include="FormEventResponder.resx">
       <DependentUpon>FormEventResponder.cs</DependentUpon>
     </EmbeddedResource>

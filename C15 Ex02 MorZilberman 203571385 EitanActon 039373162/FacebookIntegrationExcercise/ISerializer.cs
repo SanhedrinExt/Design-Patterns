@@ -13,8 +13,8 @@ namespace FacebookIntegrationExcercise
 {
     public abstract class ISerializer
     {
-        public abstract string Serialize(Object i_ObjectToSerialize, Type i_Type);
+        public abstract string Serialize(object i_ObjectToSerialize, Type i_Type);
 
-        public abstract Object Deserialize(Stream i_Stream, Type i_Type);
+        public abstract object Deserialize(Stream i_Stream, Type i_Type);
     }
 }
