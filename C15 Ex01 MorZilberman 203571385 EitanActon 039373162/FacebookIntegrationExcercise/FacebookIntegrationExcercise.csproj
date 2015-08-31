@@ -75,7 +75,6 @@
       <DependentUpon>FormConnectToTwitch.cs</DependentUpon>
     </Compile>
     <Compile Include="TwitchAPIWrapper.cs" />
-    <Compile Include="TwitchStream.cs" />
     <Compile Include="UserInfo.cs" />
     <EmbeddedResource Include="FormEventResponder.resx">
       <DependentUpon>FormEventResponder.cs</DependentUpon>
