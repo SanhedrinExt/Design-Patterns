@@ -16,7 +16,6 @@ namespace FacebookIntegrationExcercise
 {
     public partial class FormMain : Form
     {
-        private User m_LoggedInUser = null;
         private const string k_UserInfoPath = "UserInfo.info";
 
         private readonly object r_TwitchAutoUpdateLock = new object();
@@ -35,17 +34,19 @@ namespace FacebookIntegrationExcercise
 
         private void initializeFromUserInfoFile()
         {
-            if (UserInfo.Singleton.ReadUserInfoFromFile(k_UserInfoPath))
+            UserInfo userInfoSingleton = (SingletonFactory.GetSingleton(typeof(UserInfo)) as UserInfo);
+            if (userInfoSingleton.ReadUserInfoFromFile(k_UserInfoPath))
             {
-                this.Location = UserInfo.Singleton.Location;
-                this.Size = UserInfo.Singleton.Size;
-                this.checkBoxStayLoggedIn.Checked = UserInfo.Singleton.AutoLogIn;
+                this.Location = userInfoSingleton.Location;
+                this.Size = userInfoSingleton.Size;
+                this.checkBoxStayLoggedIn.Checked = userInfoSingleton.AutoLogIn;
 
                 if (checkBoxStayLoggedIn.Checked)
                 {
                     try
                     {
-                        LoginResult loginResult = FacebookService.Connect(UserInfo.Singleton.AccessToken);
+                        IFacebookConnection facebookConnection = SingletonFactory.GetSingleton(typeof(FbApiMultiFormAdapter)) as FbApiMultiFormAdapter;
+                        LoginResult loginResult = facebookConnection.Connect(userInfoSingleton.AccessToken);
 
                         if (string.IsNullOrEmpty(loginResult.AccessToken))
                         {
@@ -68,7 +69,8 @@ namespace FacebookIntegrationExcercise
         {
             try
             {
-                LoginResult loginResult = FacebookService.Login("1519758448246535", new string[] { "public_profile", "email", "user_friends", "user_posts", "publish_actions", "user_actions.news", "user_events", "rsvp_event" });
+                IFacebookConnection facebookConnection = SingletonFactory.GetSingleton(typeof(FbApiMultiFormAdapter)) as FbApiMultiFormAdapter;
+                LoginResult loginResult = facebookConnection.Login("1519758448246535", new string[] { "public_profile", "email", "user_friends", "user_posts", "publish_actions", "user_actions.news", "user_events", "rsvp_event" });
 
                 if (!string.IsNullOrEmpty(loginResult.ErrorMessage))
                 {
@@ -76,7 +78,7 @@ namespace FacebookIntegrationExcercise
                 }
                 else
                 {
-                    UserInfo.Singleton.AccessToken = loginResult.AccessToken;
+                    (SingletonFactory.GetSingleton(typeof(UserInfo)) as UserInfo).AccessToken = loginResult.AccessToken;
                     initUserInfo(loginResult.LoggedInUser);
                 }
             }
@@ -88,7 +90,6 @@ namespace FacebookIntegrationExcercise
 
         private void initUserInfo(User i_LoggedInUser)
         {
-            m_LoggedInUser = i_LoggedInUser;
             startThreaded(fetchUserProfilePic);
             startThreaded(fetchUserNewsFeed);
             startThreaded(fetchUserEvents);
@@ -98,30 +99,30 @@ namespace FacebookIntegrationExcercise
 
         private void fetchUserEvents()
         {
-            FacebookObjectCollection<Event> events = m_LoggedInUser.Events;
+            FacebookObjectCollection<Event> events = (SingletonFactory.GetSingleton(typeof(FbApiMultiFormAdapter)) as FbApiMultiFormAdapter).LoggedInUser.Events;
             this.ThreadSafeControlUpdate(() => eventBindingSource.DataSource = events);
         }
 
         private void fetchUserNewsFeed()
         {
-            FacebookObjectCollection<Post> posts = m_LoggedInUser.NewsFeed;
+            FacebookObjectCollection<Post> posts = (SingletonFactory.GetSingleton(typeof(FbApiMultiFormAdapter)) as FbApiMultiFormAdapter).LoggedInUser.NewsFeed;
             this.ThreadSafeControlUpdate(() => postBindingSource.DataSource = posts);
         }
 
         private void fetchUserFriends()
         {
-            FacebookObjectCollection<User> friends = m_LoggedInUser.Friends;
+            FacebookObjectCollection<User> friends = (SingletonFactory.GetSingleton(typeof(FbApiMultiFormAdapter)) as FbApiMultiFormAdapter).LoggedInUser.Friends;
             this.ThreadSafeControlUpdate(() => userBindingSource.DataSource = friends);
         }
 
         private void fetchUserProfilePic()
         {
-            this.ThreadSafeControlUpdate(() => pbUserProfilePic.LoadAsync(m_LoggedInUser.PictureNormalURL));
+            this.ThreadSafeControlUpdate(() => pbUserProfilePic.LoadAsync((SingletonFactory.GetSingleton(typeof(FbApiMultiFormAdapter)) as FbApiMultiFormAdapter).LoggedInUser.PictureNormalURL));
         }
 
         private void buttonLogin_Click(object sender, EventArgs e)
         {
-            if (m_LoggedInUser == null)
+            if ((SingletonFactory.GetSingleton(typeof(FbApiMultiFormAdapter)) as FbApiMultiFormAdapter).LoggedInUser == null)
             {
                 loginToFacebook();
             }
@@ -129,18 +130,19 @@ namespace FacebookIntegrationExcercise
 
         private void connectToTwitchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormConnectToTwitch twitchConnect = new FormConnectToTwitch(UserInfo.Singleton.TwitchUserName, UserInfo.Singleton.AutoPostTwitchUpdates);
+            UserInfo userInfoSingleton = SingletonFactory.GetSingleton(typeof(UserInfo)) as UserInfo;
+            FormConnectToTwitch twitchConnect = new FormConnectToTwitch(userInfoSingleton.TwitchUserName, userInfoSingleton.AutoPostTwitchUpdates);
 
             if (twitchConnect.ShowDialog() == DialogResult.OK)
             {
-                UserInfo.Singleton.TwitchUserName = twitchConnect.TwitchUserName;
-                UserInfo.Singleton.AutoPostTwitchUpdates = twitchConnect.AutoPostFacebookUpdate;
+                userInfoSingleton.TwitchUserName = twitchConnect.TwitchUserName;
+                userInfoSingleton.AutoPostTwitchUpdates = twitchConnect.AutoPostFacebookUpdate;
             }
         }
 
         private void additionalFeaturesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (m_LoggedInUser == null)
+            if ((SingletonFactory.GetSingleton(typeof(FbApiMultiFormAdapter)) as FbApiMultiFormAdapter).LoggedInUser == null)
             {
                 MessageBox.Show("Please log in to use advanced features!", "Not logged in", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 advancedFeaturesToolStripMenuItem.HideDropDown();
@@ -165,30 +167,32 @@ namespace FacebookIntegrationExcercise
 
         private void FormMain_Move(object sender, EventArgs e)
         {
-            UserInfo.Singleton.Location = this.Location;
+            (SingletonFactory.GetSingleton(typeof(UserInfo)) as UserInfo).Location = this.Location;
         }
 
         private void FormMain_Resize(object sender, EventArgs e)
         {
-            UserInfo.Singleton.Size = this.Size;
+            (SingletonFactory.GetSingleton(typeof(UserInfo)) as UserInfo).Size = this.Size;
         }
 
         private void checkBoxStayLoggedIn_CheckedChanged(object sender, EventArgs e)
         {
-            UserInfo.Singleton.AutoLogIn = checkBoxStayLoggedIn.Checked;
+            (SingletonFactory.GetSingleton(typeof(UserInfo)) as UserInfo).AutoLogIn = checkBoxStayLoggedIn.Checked;
         }
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing && UserInfo.Singleton.AutoPostTwitchUpdates && !string.IsNullOrEmpty(UserInfo.Singleton.TwitchUserName))
+            UserInfo userInfoSingleton = SingletonFactory.GetSingleton(typeof(UserInfo)) as UserInfo;
+
+            if (e.CloseReason == CloseReason.UserClosing && userInfoSingleton.AutoPostTwitchUpdates && !string.IsNullOrEmpty(userInfoSingleton.TwitchUserName))
             {
                 this.Visible = false;
                 notifyIconTwitchService.ShowBalloonTip(1000, "Facebook App is still running", "Right click this notification icon to open or close the app", ToolTipIcon.Info);
                 e.Cancel = true;
             }
-            else if(e.CloseReason == CloseReason.ApplicationExitCall || !UserInfo.Singleton.AutoPostTwitchUpdates || string.IsNullOrEmpty(UserInfo.Singleton.TwitchUserName))
+            else if(e.CloseReason == CloseReason.ApplicationExitCall || !userInfoSingleton.AutoPostTwitchUpdates || string.IsNullOrEmpty(userInfoSingleton.TwitchUserName))
             {
-                UserInfo.Singleton.SaveUserInfoAsXmlFile(k_UserInfoPath);
+                userInfoSingleton.SaveUserInfoAsXmlFile(k_UserInfoPath);
                 exitApplication();
             }
         }
@@ -216,25 +220,23 @@ namespace FacebookIntegrationExcercise
 
         private void AutoPostTwitchUpdate()
         {
+            UserInfo userInfoSingleton = SingletonFactory.GetSingleton(typeof(UserInfo)) as UserInfo;
+
             //A lock on the entire method is ok since we don't want to post twice about the event.
             lock (r_TwitchAutoUpdateLock)
             {
-                if (UserInfo.Singleton.AutoPostTwitchUpdates && !string.IsNullOrEmpty(UserInfo.Singleton.TwitchUserName))
+                if (userInfoSingleton.AutoPostTwitchUpdates && !string.IsNullOrEmpty(userInfoSingleton.TwitchUserName))
                 {
-                    if (TwitchAPIWrapper.CheckIfStreamStarted(UserInfo.Singleton.TwitchUserName))
-                    {
-                        m_LoggedInUser.PostStatus(string.Format("I have just gone online!{0}Come watch me at:{0}{1}{2}", Environment.NewLine, TwitchAPIWrapper.TwitchBaseAddress, UserInfo.Singleton.TwitchUserName));
-                        notifyIconTwitchService.ShowBalloonTip(1000, "Facebook update posted!", "A post linking to your newly started stream had been posted to your Facebook page", ToolTipIcon.Info);
-                    }
+                    (SingletonFactory.GetSingleton(typeof(TwitchForFacebookProxy)) as TwitchForFacebookProxy).CheckIfStreamStarted(userInfoSingleton.TwitchUserName);
                 }
             }
         }
 
         private void massEventRSVPToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            m_LoggedInUser.ReFetch(DynamicWrapper.eLoadOptions.FullWithConnections);
+            (SingletonFactory.GetSingleton(typeof(FbApiMultiFormAdapter)) as FbApiMultiFormAdapter).LoggedInUser.ReFetch(DynamicWrapper.eLoadOptions.FullWithConnections);
 
-            FormEventResponder eventResponder = new FormEventResponder(m_LoggedInUser.EventsNotYetReplied);
+            FormEventResponder eventResponder = new FormEventResponder((SingletonFactory.GetSingleton(typeof(FbApiMultiFormAdapter)) as FbApiMultiFormAdapter).LoggedInUser.EventsNotYetReplied);
 
             if (eventResponder.ShowDialog() == DialogResult.OK)
             {

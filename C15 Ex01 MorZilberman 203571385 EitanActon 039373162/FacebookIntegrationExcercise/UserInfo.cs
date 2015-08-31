@@ -8,15 +8,12 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
 using System.Windows.Forms;
+using System.Reflection;
 
 namespace FacebookIntegrationExcercise
 {
     public sealed class UserInfo
     {
-        private static UserInfo s_UserInfoSingleton = null;
-
-        private static readonly object sr_SingletonCreationLock = new object();
-
         public Point Location { set; get; }
         public Size Size { set; get; }
         public bool AutoLogIn { set; get; }
@@ -28,35 +25,12 @@ namespace FacebookIntegrationExcercise
         {
         }
 
-        /// <summary>
-        /// Gets the singleton instance of the userinfo.
-        /// </summary>
-        public static UserInfo Singleton
-        {
-            get
-            {
-                if (s_UserInfoSingleton == null)
-                {
-                    lock (sr_SingletonCreationLock)
-                    {
-                        if (s_UserInfoSingleton == null)
-                        {
-                            s_UserInfoSingleton = new UserInfo();
-                        }
-                    }
-                }
-
-                return s_UserInfoSingleton;
-            }
-        }
-
-
         private string parseUserInfoToXml()
         {
             XmlSerializer serializer = new XmlSerializer(typeof(UserInfo));
             MemoryStream memoryStream = new MemoryStream();
 
-            serializer.Serialize(memoryStream, Singleton);
+            serializer.Serialize(memoryStream, SingletonFactory.GetSingleton(typeof(UserInfo)));
             memoryStream.Position = 0;
 
             return new StreamReader(memoryStream).ReadToEnd();
@@ -97,7 +71,7 @@ namespace FacebookIntegrationExcercise
                     using (FileStream file = new FileStream(i_filePath, FileMode.Open))
                     {
                         XmlSerializer serializer = new XmlSerializer(typeof(UserInfo));
-                        s_UserInfoSingleton = (UserInfo)serializer.Deserialize(file);
+                        (SingletonFactory.GetSingleton(typeof(UserInfo)) as UserInfo).populateUserInfo((UserInfo)serializer.Deserialize(file));
                     }
                 }
                 catch (Exception exception)
@@ -109,6 +83,14 @@ namespace FacebookIntegrationExcercise
             }
 
             return readSuccessful;
+        }
+
+        private void populateUserInfo(UserInfo i_UserInfo)
+        {
+            foreach (PropertyInfo property in typeof(UserInfo).GetProperties())
+            {
+                property.SetValue(this, property.GetValue(i_UserInfo));
+            }
         }
     }
 }

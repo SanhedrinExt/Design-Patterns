@@ -46,7 +46,7 @@ namespace FacebookIntegrationExcercise
         {
             if (!(checkBoxAutoPost.Checked && string.IsNullOrEmpty(textBoxUserName.Text)))
             {
-                if (!checkBoxAutoPost.Checked || TwitchAPIWrapper.CheckIfChannelExists(textBoxUserName.Text))
+                if (!checkBoxAutoPost.Checked || (SingletonFactory.GetSingleton(typeof(TwitchForFacebookProxy)) as TwitchForFacebookProxy).CheckIfChannelExists(textBoxUserName.Text))
                 {
                     this.DialogResult = DialogResult.OK;
                 }
