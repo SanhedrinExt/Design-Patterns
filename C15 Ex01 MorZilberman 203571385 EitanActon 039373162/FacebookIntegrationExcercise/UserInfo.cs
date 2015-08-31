@@ -8,12 +8,17 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
 using System.Windows.Forms;
-using System.Reflection;
 
 namespace FacebookIntegrationExcercise
 {
     public sealed class UserInfo
     {
+        private static UserInfo s_UserInfoSingleton = null;
+
+        private static readonly object sr_SingletonCreationLock = new object();
+
+        private UserInfoDataManger m_DataManger;
+
         public Point Location { set; get; }
         public Size Size { set; get; }
         public bool AutoLogIn { set; get; }
@@ -23,74 +28,41 @@ namespace FacebookIntegrationExcercise
 
         private UserInfo()
         {
-        }
-
-        private string parseUserInfoToXml()
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(UserInfo));
-            MemoryStream memoryStream = new MemoryStream();
-
-            serializer.Serialize(memoryStream, SingletonFactory.GetSingleton(typeof(UserInfo)));
-            memoryStream.Position = 0;
-
-            return new StreamReader(memoryStream).ReadToEnd();
-        }
-        
-        /// <summary>
-        /// Save user settings to file.
-        /// </summary>
-        /// <param name="i_filePath">Path to save file.</param>
-        public void SaveUserInfoAsXmlFile(string i_filePath)
-        {
-            using (StreamWriter file = new StreamWriter(i_filePath))
-            {
-                try
-                {
-                    file.Write(parseUserInfoToXml());
-                }
-                catch (Exception exception)
-                {
-                    MessageBox.Show(string.Format("Error saving to file!{0}The error returned:{0}{1}", Environment.NewLine, exception.Message));
-                }
-            }
+            m_DataManger = new UserInfoDataManger() { m_DataManger = new FileManager(), m_Serializer = new MyXmlSerializer() };
         }
 
         /// <summary>
-        /// Read user settings from file.
+        /// Gets the singleton instance of the userinfo.
         /// </summary>
-        /// <param name="i_filePath">Path to file.</param>
-        /// <returns>True if user settings exist, false otherwise.</returns>
-        public bool ReadUserInfoFromFile(string i_filePath)
+        public static UserInfo Singleton
         {
-            bool readSuccessful = false;
-
-            if (File.Exists(i_filePath))
+            get
             {
-                try
+                if (s_UserInfoSingleton == null)
                 {
-                    using (FileStream file = new FileStream(i_filePath, FileMode.Open))
+                    lock (sr_SingletonCreationLock)
                     {
-                        XmlSerializer serializer = new XmlSerializer(typeof(UserInfo));
-                        (SingletonFactory.GetSingleton(typeof(UserInfo)) as UserInfo).populateUserInfo((UserInfo)serializer.Deserialize(file));
+                        if (s_UserInfoSingleton == null)
+                        {
+                            s_UserInfoSingleton = new UserInfo();
+                        }
                     }
                 }
-                catch (Exception exception)
-                {
-                    MessageBox.Show(string.Format("Error loading from file!{0}The error returned:{0}{1}", Environment.NewLine, exception.Message));
-                }
 
-                readSuccessful = true;
+                return s_UserInfoSingleton;
             }
-
-            return readSuccessful;
+        }
+        public void SaveUserInfo(string i_Path)
+        {
+            m_DataManger.SaveUserInfo(i_Path, this);
         }
 
-        private void populateUserInfo(UserInfo i_UserInfo)
+        public bool LoadUserInfo(string i_filePath)
         {
-            foreach (PropertyInfo property in typeof(UserInfo).GetProperties())
-            {
-                property.SetValue(this, property.GetValue(i_UserInfo));
-            }
+
+            s_UserInfoSingleton = m_DataManger.loadUserInfo(i_filePath);
+
+            return s_UserInfoSingleton != null;
         }
     }
 }
