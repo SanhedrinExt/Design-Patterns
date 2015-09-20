@@ -7,8 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacebookIntegrationExcercis
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8702AA9D-BC2A-4EB4-A6AA-7746F4C54E0B}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\..\Downloads\Design Patterns ex01.docx = ..\..\..\Downloads\Design Patterns ex01.docx
-		..\..\..\Downloads\Submission Details.txt = ..\..\..\Downloads\Submission Details.txt
+		C15 Ex02 Mor 203571385 Eitan 039373162.docx = C15 Ex02 Mor 203571385 Eitan 039373162.docx
+		DP_Ex02_TemplateForStudents.docx = DP_Ex02_TemplateForStudents.docx
+		Submission Details.txt = Submission Details.txt
 	EndProjectSection
 EndProject
 Global
