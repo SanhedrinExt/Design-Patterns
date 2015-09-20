@@ -11,9 +11,9 @@ using System.Windows.Forms;
 
 namespace FacebookIntegrationExcercise 
 {
-    public class FileManager : IDataManager
+    public class FileManager : UserInfoDataManger
     {
-        public override void SaveData(string i_Path, string i_Data)
+        protected override void SaveData(string i_Path, string i_Data)
         {
             SaveDataToFile(i_Path, i_Data);
         }
@@ -33,12 +33,12 @@ namespace FacebookIntegrationExcercise
             }
         }
 
-        public override Object LoadData(string i_Path,ISerializer i_Serialzer,Type i_Type)
+        protected override Object LoadData(string i_Path,Type i_Type)
         {
-            return ReadFromFile(i_Path, i_Serialzer, i_Type);
+            return ReadFromFile(i_Path, i_Type);
         }
 
-        private Object ReadFromFile(string i_FilePath, ISerializer i_Serialzer, Type i_Type)
+        private Object ReadFromFile(string i_FilePath, Type i_Type)
         {
             object deserializedObject = null;
             FileStream file;
@@ -49,7 +49,7 @@ namespace FacebookIntegrationExcercise
                 {
                     using (file = new FileStream(i_FilePath, FileMode.Open))
                     {
-                       deserializedObject = i_Serialzer.Deserialize(file, i_Type);
+                        deserializedObject = Serializer.Deserialize(file, i_Type);
                     }
                 }
                 catch (Exception exception)
