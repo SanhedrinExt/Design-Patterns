@@ -25,7 +25,7 @@ namespace FacebookIntegrationExcercise
 
         private UserInfo()
         {
-            m_DataManager = new UserInfoDataManger() { DataManager = new FileManager(), Serializer = new GeneralPurposeXmlSerializer() };
+            m_DataManager = new FileManager() { Serializer = new GeneralPurposeXmlSerializer() };
         }
 
         public void SaveUserInfo(string i_Path)
